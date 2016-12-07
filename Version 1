@@ -1,0 +1,20 @@
+task main()
+{
+     SetSensorLowspeed(IN_1);
+     while(1)
+     {    ClearScreen();
+     NumOut(10,10,SensorUS(IN_1));
+     if (SensorUS(IN_1) < 50)
+     {
+     Off(OUT_AB);
+        OnRev(OUT_A,100);
+        OnFwd(OUT_B,100);
+        Wait(500);
+      Off(OUT_AB);
+      }
+      else
+      {
+          OnRev(OUT_AB,90);
+        }
+      }
+}
