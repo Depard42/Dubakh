@@ -1,21 +1,36 @@
-task main()
-{
+task main(){
+unsigned long timer;
+long countA;
+long countB;
+short b;
+string save="";
+int fsize=32767;
+byte text;
+DeleteFile("memory.txt");
+CreateFile("memory.txt", fsize, txt);
+
+
      SetSensorLowspeed(IN_1);
      while(1)
-     {    ClearScreen();
-     NumOut(10,10,SensorUS(IN_1));
-     if (SensorUS(IN_1) < 50)
      {
-     Off(OUT_AB);
-        OnRev(OUT_A,100);
-        OnFwd(OUT_B,100);
+          ResetRotationCount(OUT_AB);
+     if (SensorUS(IN_1) < 30)
+     {
+        Off(OUT_AB);
+        OnRevSync(OUT_A,100,100);
         Wait(500);
-      Off(OUT_AB);
+        Off(OUT_AB);
       }
       else
       {
-          OnRev(OUT_AB,90);
+          OnRevSync(OUT_AB,90,0);
         }
+       countA= MotorRotationCount(OUT_A);
+       countB= MotorRotationCount(OUT_A);
+       timer= CurrentTick();
+       save=strcat(save,NumToStr(timer),":",NumToStr(countA),"," NumToStr(countB),"\n")
       }
-      // комментарий
+
+WriteLnString(text,save,b);
+CloseFile(text)
 }
