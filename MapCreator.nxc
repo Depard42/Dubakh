@@ -34,3 +34,4 @@ CreateFile("memory.txt", fsize, txt);
 WriteLnString(text,save,b);
 CloseFile(text)
 }
+//test
