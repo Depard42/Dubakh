@@ -2,36 +2,39 @@ task main(){
 unsigned long timer;
 long countA;
 long countB;
-short b;
-string save="";
+string save="" ;
 int fsize=32767;
 byte text;
+bool wall=0;
+int RotateCNT=0;
+unsigned int len=0;
+unsigned int StartTimer;
+SetSensorLowspeed(IN_1);
+SetSensorTouch(IN_2);
 DeleteFile("memory.txt");
-CreateFile("memory.txt", fsize, txt);
-
-
-     SetSensorLowspeed(IN_1);
-     while(1)
+CreateFile("memory.txt", fsize, text);
+      while(SENSOR_2==0);
+      Wait(500);
+      StartTimer=CurrentTick()-FirstTick();
+     while(SENSOR_2==0)
      {
           ResetRotationCount(OUT_AB);
-     if (SensorUS(IN_1) < 30)
-     {
-        Off(OUT_AB);
-        OnRevSync(OUT_A,100,100);
-        Wait(500);
-        Off(OUT_AB);
-      }
-      else
-      {
-          OnRevSync(OUT_AB,90,0);
-        }
+          if (SensorUS(IN_1) < 30){wall=1;}
+          if (wall==1&&RotateCNT<20){
+             OnRevSync(OUT_AB,100,100);
+             RotateCNT++;
+             }
+          else{
+               wall=0;
+               RotateCNT=0;
+               OnRevSync(OUT_AB,90,0);
+               }
        countA= MotorRotationCount(OUT_A);
-       countB= MotorRotationCount(OUT_A);
-       timer= CurrentTick();
-       save=strcat(save,NumToStr(timer),":",NumToStr(countA),"," NumToStr(countB),"\n")
+       countB= MotorRotationCount(OUT_B);
+       timer= CurrentTick()-FirstTick()-StartTimer;
+       save=StrCat(NumToStr(timer),":",NumToStr(countA),",",NumToStr(countB),"\n" );
+       len+=StrLen(save);
+       WriteString(text,save,len) ;
       }
-
-WriteLnString(text,save,b);
-CloseFile(text)
+CloseFile(text);
 }
-//test
