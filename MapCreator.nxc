@@ -2,6 +2,7 @@ task main(){
 unsigned long timer;
 long countA;
 long countB;
+long usdis=0;
 string save="" ;
 int fsize=32767;
 byte text;
@@ -18,21 +19,23 @@ CreateFile("memory.txt", fsize, text);
       StartTimer=CurrentTick()-FirstTick();
      while(SENSOR_2==0)
      {
+          usdis=SensorUS(IN_1);
           ResetRotationCount(OUT_AB);
-          if (SensorUS(IN_1) < 30){wall=1;}
-          if (wall==1&&RotateCNT<20){
-             OnRevSync(OUT_AB,100,100);
+          if (SensorUS(IN_1) < 35){wall=1;}
+          if (wall==1&&RotateCNT<6){
+             OnFwdSync(OUT_AB,100,100);
              RotateCNT++;
              }
           else{
                wall=0;
                RotateCNT=0;
-               OnRevSync(OUT_AB,90,0);
+               OnFwdSync(OUT_AB,70,0);
                }
        countA= MotorRotationCount(OUT_A);
        countB= MotorRotationCount(OUT_B);
        timer= CurrentTick()-FirstTick()-StartTimer;
-       save=StrCat(NumToStr(timer),":",NumToStr(countA),",",NumToStr(countB),"\n" );
+       if (usdis==255){save=StrCat(NumToStr(timer),"\n",NumToStr(countA),"\n",NumToStr(countB),"\n","0","\n");}
+       else{save=StrCat(NumToStr(timer),"\n",NumToStr(countA),"\n",NumToStr(countB),"\n",NumToStr(usdis),"\n");}
        len+=StrLen(save);
        WriteString(text,save,len) ;
       }
